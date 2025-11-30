@@ -1,11 +1,10 @@
 # 🛍️ Neusearch AI - Product Discovery Assistant
 
+Neusearch AI is a mini AI-powered product discovery assistant designed to help users find the right products using natural language queries. It combines a robust scraping pipeline, a FastAPI backend with vector search capabilities, and a modern React frontend to deliver a seamless user experience.
+
 Home Page -
 
 <img width="1901" height="864" alt="image" src="https://github.com/user-attachments/assets/799fe615-a80f-4a4c-b04a-34574132e165" />
-
-
-Neusearch AI is a mini AI-powered product discovery assistant designed to help users find the right products using natural language queries. It combines a robust scraping pipeline, a FastAPI backend with vector search capabilities, and a modern React frontend to deliver a seamless user experience.
 
 ## 🚀 Features
 
