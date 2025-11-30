@@ -1,6 +1,8 @@
 # 🛍️ Neusearch AI - Product Discovery Assistant
 
-![Home Page](screenshots/home_page.png)
+![Home Page]()
+<img width="1901" height="864" alt="image" src="https://github.com/user-attachments/assets/799fe615-a80f-4a4c-b04a-34574132e165" />
+
 
 Neusearch AI is a mini AI-powered product discovery assistant designed to help users find the right products using natural language queries. It combines a robust scraping pipeline, a FastAPI backend with vector search capabilities, and a modern React frontend to deliver a seamless user experience.
 
@@ -93,8 +95,10 @@ The core of the recommendation engine is a Retrieval-Augmented Generation (RAG) 
     -   ChromaDB performs a similarity search (Cosine Similarity) to find the top `k` matches.
 5.  **Response**: The system formats the retrieved results into a structured response for the frontend.
 
-![Chat Response](screenshots/chat_response.png)
-
+![Chat Response]()
+<img width="1917" height="865" alt="image" src="https://github.com/user-attachments/assets/3fb1ee30-cc3f-406a-81eb-1d573db35224" />
+![Product Detail]()
+<img width="1919" height="866" alt="image" src="https://github.com/user-attachments/assets/48cca30a-551a-4c20-acb8-3aeebe177025" />
 ---
 
 ## 🕷️ Scraping Approach
@@ -132,4 +136,5 @@ If I had more time, I would:
 
 ---
 
-![Product Detail](screenshots/product_detail.png)
+
+
