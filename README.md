@@ -1,6 +1,7 @@
 # 🛍️ Neusearch AI - Product Discovery Assistant
 
-![Home Page]()
+![Home Page]
+
 <img width="1901" height="864" alt="image" src="https://github.com/user-attachments/assets/799fe615-a80f-4a4c-b04a-34574132e165" />
 
 
@@ -95,9 +96,12 @@ The core of the recommendation engine is a Retrieval-Augmented Generation (RAG) 
     -   ChromaDB performs a similarity search (Cosine Similarity) to find the top `k` matches.
 5.  **Response**: The system formats the retrieved results into a structured response for the frontend.
 
-![Chat Response]()
+![Chat Response]
+
 <img width="1917" height="865" alt="image" src="https://github.com/user-attachments/assets/3fb1ee30-cc3f-406a-81eb-1d573db35224" />
-![Product Detail]()
+
+![Product Detail]
+
 <img width="1919" height="866" alt="image" src="https://github.com/user-attachments/assets/48cca30a-551a-4c20-acb8-3aeebe177025" />
 ---
 
