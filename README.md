@@ -1,144 +1,104 @@
-# 🛍️ Neusearch AI - Product Discovery Assistant
+# 🛍️ Neusearch AI - The Intelligent Product Discovery Assistant
 
-Neusearch AI is a mini AI-powered product discovery assistant designed to help users find the right products using natural language queries. It combines a robust scraping pipeline, a FastAPI backend with vector search capabilities, and a modern React frontend to deliver a seamless user experience.
+![Home Page](screenshots/home_page.png)
 
-Home Page -
+> **"Search shouldn't just match keywords; it should understand intent."**
 
-<img width="1901" height="864" alt="image" src="https://github.com/user-attachments/assets/799fe615-a80f-4a4c-b04a-34574132e165" />
-
-## 🚀 Features
-
--   **Semantic Search**: Understands abstract queries like "I have dry hair" and recommends relevant products.
--   **RAG Pipeline**: Uses Retrieval-Augmented Generation principles to interpret user intent and fetch the best matches.
--   **Modern UI**: A responsive, premium-feel interface built with React and Tailwind CSS.
--   **Automated Scraping**: Custom Python scraper to fetch real-time product data.
--   **Containerized**: Fully Dockerized for easy deployment.
+Neusearch AI is a next-generation e-commerce assistant that bridges the gap between what users *say* ("I have dry hair") and what they *need* (Hydrating Shampoo). Built with a modern RAG (Retrieval-Augmented Generation) pipeline, it delivers semantic product recommendations in milliseconds.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🚀 Features
 
-### **Frontend**
--   **Framework**: React (Vite)
--   **Styling**: Tailwind CSS v3 (Custom configuration for premium aesthetics)
--   **Routing**: React Router DOM
+-   **🧠 Semantic Understanding**: Uses `sentence-transformers` to encode user queries and find products based on meaning, not just keywords.
+-   **💬 AI-Powered Chat**: A conversational interface that feels like talking to a knowledgeable sales associate.
+-   **🎨 Premium UI/UX**: A responsive, aesthetically pleasing interface built with **React** and **Tailwind CSS v3**.
+-   **⚡ Real-Time Data**: Custom Python scraper fetches live product data (Title, Price, Features) from the web.
+-   **🐳 Production Ready**: Fully containerized with **Docker** and **Docker Compose**.
 
-### **Backend**
--   **Framework**: FastAPI (High performance, easy async support)
--   **Database**: PostgreSQL (Structured data), ChromaDB (Vector embeddings)
--   **ORM**: SQLAlchemy
--   **ML/AI**: `sentence-transformers/all-MiniLM-L6-v2` for generating embeddings.
+---
 
-### **Data Pipeline**
--   **Scraper**: Python (`requests`, `BeautifulSoup`) with robust error handling and heuristic feature extraction.
+## 🛠️ Tech Stack
+
+| Component | Technology | Why? |
+| :--- | :--- | :--- |
+| **Frontend** | React + Vite | Blazing fast HMR and component-based architecture. |
+| **Styling** | Tailwind CSS | Utility-first CSS for rapid, consistent UI development. |
+| **Backend** | FastAPI | High-performance, async Python framework perfect for ML apps. |
+| **Database** | PostgreSQL | Robust relational storage for product metadata. |
+| **Vector DB** | ChromaDB | Efficient local vector storage for semantic search. |
+| **ML Model** | `all-MiniLM-L6-v2` | Lightweight, high-speed embedding model. |
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    User[User Query] -->|POST /chat| API[FastAPI Backend]
+    API -->|Encode Query| Model[Embedding Model]
+    Model -->|Vector| Chroma[ChromaDB]
+    Chroma -->|Top K Matches| API
+    API -->|Format Response| Frontend[React UI]
+    Scraper[Python Scraper] -->|Raw Data| Postgres[PostgreSQL]
+    Postgres -->|Sync| Chroma
+```
+
+---
+
+## 🔧 Engineering Journey & Debugging Highlights
+
+Building robust software is rarely a straight line. Here are some of the technical hurdles I overcame to build Neusearch AI:
+
+### 1. The "Invisible" Environment Variables (Windows Encoding)
+**The Challenge:** The backend refused to start, claiming `DATABASE_URL` was `None`, even though the `.env` file existed.
+**The Investigation:**
+-   I added debug prints to `database.py` and discovered the file path was resolving correctly.
+-   However, `python-dotenv` failed to parse it.
+-   **The Culprit:** PowerShell created the `.env` file with a specific encoding (UTF-16 LE BOM) that Python's standard reader choked on, causing a `UnicodeDecodeError`.
+**The Fix:** I wrote a Python script to explicitly rewrite the `.env` file with `utf-8` encoding, ensuring cross-platform compatibility.
+
+### 2. The CORS Labyrinth
+**The Challenge:** The frontend (port 5173) couldn't talk to the backend (port 8000).
+**The Fix:** I implemented a robust `CORSMiddleware` configuration in FastAPI, explicitly allowlisting development ports (`5173`, `5174`, `5175`) while preparing for a stricter production setup.
+
+### 3. Tailwind CSS Build Pipeline
+**The Challenge:** Styles were not applying, leaving the app looking "broken."
+**The Fix:** I diagnosed a mismatch between the PostCSS configuration and Tailwind v3. I reset the `postcss.config.js` and correctly configured the `content` paths in `tailwind.config.js` to scan all React components.
+
+---
+
+## 🔮 Future Roadmap
+
+If I had more time, here is where I would take Neusearch AI next:
+
+-   **🔐 User Authentication**: Implement JWT-based login to save user preferences and chat history.
+-   **🧠 LLM Integration**: Replace the template-based response with a real LLM (GPT-4 or Gemini) to generate empathetic, personalized advice explaining *why* a product was recommended.
+-   **🛒 Cart Functionality**: Allow users to add products directly to a cart from the chat interface.
+-   **☁️ Cloud Deployment**: Deploy the Docker containers to AWS ECS or Render for global accessibility.
 
 ---
 
 ## 🏃‍♂️ How to Run Locally
 
 ### Prerequisites
--   Docker & Docker Compose (Recommended)
--   **OR** Python 3.9+ and Node.js 16+
+-   Docker & Docker Compose
 
-### Option 1: Using Docker (Easiest)
-1.  Clone the repository.
-2.  Run the following command:
+### Quick Start
+1.  **Clone the repo**
+2.  **Setup Environment**:
+    Ensure you have a `.env` file in the root directory:
+    ```env
+    DATABASE_URL=postgresql://user:pass@host/db
+    ```
+3.  **Run with Docker**:
     ```bash
     docker-compose up --build
     ```
-3.  Access the application:
+4.  **Access the App**:
     -   Frontend: `http://localhost:3000`
-    -   Backend API: `http://localhost:8000/docs`
-
-### Option 2: Manual Setup
-
-#### 1. Backend Setup
-```bash
-cd backend
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
-
-pip install -r requirements.txt
-
-# Set up Database (Update DATABASE_URL in app/database.py if needed)
-# Run Data Ingestion & Vector Indexing
-export PYTHONPATH=.
-python ingest_data.py
-python build_vector_db.py
-
-# Start Server
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-#### 2. Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
-```
-Access the frontend at the URL shown in the terminal (usually `http://localhost:5173`).
+    -   Backend Docs: `http://localhost:8000/docs`
 
 ---
 
-## 🧠 RAG Pipeline Design
-
-The core of the recommendation engine is a Retrieval-Augmented Generation (RAG) pipeline:
-
-1.  **Ingestion**: Product data (Title, Description, Features) is concatenated into a single context string.
-2.  **Embedding**: We use `sentence-transformers/all-MiniLM-L6-v2` to convert this text into 384-dimensional vectors.
-3.  **Storage**: Vectors are stored in **ChromaDB**, a local vector database, alongside metadata (Price, Image URL).
-4.  **Retrieval**:
-    -   User query (e.g., "hair fall solution") is embedded using the same model.
-    -   ChromaDB performs a similarity search (Cosine Similarity) to find the top `k` matches.
-5.  **Response**: The system formats the retrieved results into a structured response for the frontend.
-
-Chat Response -
-
-<img width="1917" height="865" alt="image" src="https://github.com/user-attachments/assets/3fb1ee30-cc3f-406a-81eb-1d573db35224" />
-
-
-Product Detail -
-
-<img width="1919" height="866" alt="image" src="https://github.com/user-attachments/assets/48cca30a-551a-4c20-acb8-3aeebe177025" />
----
-
-## 🕷️ Scraping Approach
-
-The scraper (`data/scraper/scrape_traya.py`) is designed to be resilient and polite:
-
--   **Discovery**: It first crawls the "All Products" collection page to gather unique product URLs.
--   **Extraction**: It visits each product page to extract:
-    -   **Title & Price**: Standard CSS selectors.
-    -   **Features**: Uses heuristic patterns (bullet points, specific classes) to extract key benefits, falling back to description text if needed.
-    -   **Images**: Prioritizes high-res images.
--   **Politeness**: Includes random delays between requests to avoid overwhelming the target server.
-
----
-
-## ⚖️ Challenges & Trade-offs
-
-1.  **Dynamic Content**: Some product details were hard to scrape due to inconsistent HTML structures across pages.
-    -   *Trade-off*: Used a heuristic approach for "Features" which is robust but might miss some edge cases.
-2.  **Vector DB Choice**: Chosen **ChromaDB** for simplicity and local development speed.
-    -   *Trade-off*: For a massive scale (millions of products), a managed solution like Pinecone or Weaviate might be better.
-3.  **LLM Integration**: Currently using a retrieval-based response generation.
-    -   *Trade-off*: Fast and free, but lacks the conversational nuance of a full LLM (like GPT-4) generating custom advice.
-
----
-
-## 🌟 Future Improvements
-
-If I had more time, I would:
-
-1.  **Integrate a Generative LLM**: Connect the retrieval output to OpenAI's GPT-4 or Gemini to generate personalized, empathetic advice explaining *why* a product is good for the user.
-2.  **Hybrid Search**: Combine vector search with keyword search (BM25) to handle specific product name queries better.
-3.  **User Personalization**: Store user preferences or quiz results to tailor recommendations further.
-4.  **Production Deployment**: Set up a CI/CD pipeline to deploy to AWS (ECS for containers, RDS for DB).
-
----
-
-
-
+*Built by AMIT KUSHWAHA*

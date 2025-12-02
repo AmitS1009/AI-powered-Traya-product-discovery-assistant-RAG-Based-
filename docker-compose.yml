@@ -5,26 +5,14 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://neondb_owner:npg_2dJrW3HaDhwo@ep-late-darkness-adbnwn98-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
-    depends_on:
-      - db
+    env_file:
+      - .env
+    volumes:
+      - ./backend/chroma_db:/app/chroma_db
 
   frontend:
     build: ./frontend
     ports:
-      - "3000:80"
+      - "3000:3000"
     depends_on:
       - backend
-
-  db:
-    image: postgres:13
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=product_db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
