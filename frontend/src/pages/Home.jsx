@@ -8,7 +8,8 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:8000/products?limit=50')
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+        fetch(`${apiUrl}/products?limit=50`)
             .then(res => res.json())
             .then(data => {
                 setProducts(data);
